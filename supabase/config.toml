@@ -1,0 +1,10 @@
+project_id = "fvkcaljblhcfqtnokdwz"
+
+[functions.process-document]
+verify_jwt = true
+
+[functions.search-documents]
+verify_jwt = true
+
+[functions.chat-with-documents]
+verify_jwt = true
