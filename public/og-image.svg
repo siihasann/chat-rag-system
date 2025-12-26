@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e0f2fe" />
+      <stop offset="100%" stop-color="#bae6fd" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect x="80" y="80" width="1040" height="470" rx="48" fill="white" opacity="0.92" />
+  <rect x="140" y="140" width="920" height="60" rx="20" fill="#e2e8f0" />
+  <rect x="140" y="230" width="520" height="18" rx="9" fill="#94a3b8" />
+  <rect x="140" y="270" width="420" height="18" rx="9" fill="#cbd5f5" />
+  <rect x="140" y="310" width="480" height="18" rx="9" fill="#cbd5f5" />
+  <rect x="140" y="360" width="320" height="44" rx="16" fill="url(#accent)" />
+  <text x="160" y="392" font-family="Inter, Arial, sans-serif" font-size="20" fill="#ffffff">Start free</text>
+
+  <rect x="720" y="230" width="340" height="210" rx="28" fill="#0ea5e9" />
+  <text x="760" y="290" font-family="Inter, Arial, sans-serif" font-size="24" fill="#ffffff" font-weight="600">PaperChat AI</text>
+  <text x="760" y="330" font-family="Inter, Arial, sans-serif" font-size="18" fill="#e0f2fe">Document intelligence</text>
+  <text x="760" y="362" font-family="Inter, Arial, sans-serif" font-size="18" fill="#e0f2fe">for modern teams</text>
+
+  <text x="140" y="520" font-family="Lora, Georgia, serif" font-size="48" fill="#0f172a" font-weight="600">
+    Turn documents into knowledge.
+  </text>
+  <text x="140" y="570" font-family="Inter, Arial, sans-serif" font-size="24" fill="#334155">
+    Instant summaries and answers from every file.
+  </text>
+</svg>
