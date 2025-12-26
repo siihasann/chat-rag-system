@@ -1,67 +1,80 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, MessageSquare, FolderOpen, Shield, Zap, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Brain, FileStack, MessageSquareText, ShieldCheck, Timer, Users } from "lucide-react";
 
 const features = [
   {
-    icon: FileText,
-    title: "Smart Document Upload",
-    description: "Upload PDF, DOCX, TXT files. Automatic text extraction and AI embedding for instant searchability."
+    icon: FileStack,
+    title: "Unified workspace",
+    description: "Group contracts, reports, and policies into a single searchable space for every team."
   },
   {
-    icon: MessageSquare,
-    title: "Interactive AI Chat",
-    description: "Ask questions, get summaries, extract insights. Conversational interface with context-aware responses."
+    icon: MessageSquareText,
+    title: "Conversational analysis",
+    description: "Ask questions in natural language and get grounded, cited answers with full context."
   },
   {
-    icon: FolderOpen,
-    title: "Multi-File Knowledge",
-    description: "Combine multiple documents into one workspace. Query across all files for comprehensive analysis."
+    icon: Brain,
+    title: "Auto summaries",
+    description: "Instant briefs, highlights, and risks generated for each upload and updated continuously."
   },
   {
-    icon: Shield,
-    title: "Role-Based Access",
-    description: "Control permissions with Owner, Member, and Viewer roles. Secure collaboration for teams."
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast",
-    description: "Powered by advanced vector search and AI models. Get answers in seconds, not hours."
+    icon: ShieldCheck,
+    title: "Secure by default",
+    description: "Granular permissions, audit trails, and encrypted storage keep sensitive data protected."
   },
   {
     icon: Users,
-    title: "Team Collaboration",
-    description: "Invite team members, share workspaces, and collaborate on document analysis in real-time."
+    title: "Team handoffs",
+    description: "Share insights and saved prompts across legal, finance, HR, and operations."
+  },
+  {
+    icon: Timer,
+    title: "Minutes, not days",
+    description: "Cut review cycles with instant extraction, tagged insights, and ready-to-share exports."
   }
 ];
 
 const Features = () => {
   return (
-    <section className="py-24 bg-accent/30">
+    <section id="features" className="py-24">
       <div className="container px-4 mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Powerful Features for Modern Teams
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to understand and analyze documents with AI
-          </p>
-        </div>
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start">
+          <div className="space-y-6 animate-fade-right">
+            <Badge className="w-fit bg-primary/10 text-primary hover:bg-primary/20">Features</Badge>
+            <h2 className="text-3xl md:text-5xl font-serif font-semibold">
+              Everything you need to move from files to decisions.
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              PaperChat AI gives teams a secure, structured way to understand documents, save insights,
+              and keep everyone aligned.
+            </p>
+            <div className="rounded-2xl border border-border/80 bg-accent/40 p-6">
+              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Key outcome</p>
+              <p className="mt-3 text-2xl font-semibold text-foreground">
+                10x faster reviews with traceable sources.
+              </p>
+            </div>
+          </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Card key={index} className="border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg">
-                <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                    <Icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
+          <div className="grid md:grid-cols-2 gap-6 animate-fade-up animate-delay-200">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={feature.title} className="border border-border/80 bg-card/90 hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground mt-2">{feature.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

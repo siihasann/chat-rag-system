@@ -11,17 +11,17 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
+              <li><a href="#workflow" className="hover:text-foreground transition-colors">Workflow</a></li>
+              <li><a href="#use-cases" className="hover:text-foreground transition-colors">Use cases</a></li>
               <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
-              <li><a href="#demo" className="hover:text-foreground transition-colors">Demo</a></li>
-              <li><a href="#api" className="hover:text-foreground transition-colors">API</a></li>
             </ul>
           </div>
           <div>
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="#about" className="hover:text-foreground transition-colors">About</a></li>
-              <li><a href="#blog" className="hover:text-foreground transition-colors">Blog</a></li>
               <li><a href="#careers" className="hover:text-foreground transition-colors">Careers</a></li>
+              <li><a href="#press" className="hover:text-foreground transition-colors">Press</a></li>
               <li><a href="#contact" className="hover:text-foreground transition-colors">Contact</a></li>
             </ul>
           </div>
@@ -29,7 +29,7 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="#docs" className="hover:text-foreground transition-colors">Documentation</a></li>
-              <li><a href="#guides" className="hover:text-foreground transition-colors">Guides</a></li>
+              <li><a href="#security" className="hover:text-foreground transition-colors">Security</a></li>
               <li><a href="#support" className="hover:text-foreground transition-colors">Support</a></li>
               <li><a href="#status" className="hover:text-foreground transition-colors">Status</a></li>
             </ul>

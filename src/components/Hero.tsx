@@ -1,71 +1,103 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
-import heroImage from "@/assets/hero-image.jpg";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight, FileText, MessageSquareText, ShieldCheck } from "lucide-react";
+
+const quickFacts = [
+  { label: "SOC 2-ready", icon: ShieldCheck },
+  { label: "50+ formats", icon: FileText },
+  { label: "Live answers", icon: MessageSquareText },
+];
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background" />
-      </div>
-
-      {/* Content */}
-      <div className="container relative z-10 px-4 py-32 mx-auto text-center">
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <Sparkles className="h-5 w-5 text-primary" />
-          <span className="text-sm font-medium text-primary uppercase tracking-wide">
-            AI-Powered Document Intelligence
-          </span>
-        </div>
-
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-          PaperChat AI
-        </h1>
-
-        <p className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-3xl mx-auto">
-          Understand files in seconds, not hours.
-        </p>
-
-        <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Upload PDF, DOC, or text files and have interactive AI-powered conversations with your documents. 
-          Perfect for businesses, legal teams, finance, HR, and students.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="text-lg px-8 group" onClick={() => window.location.href = '/auth'}>
-            Get Started Free
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
-          <Button size="lg" variant="outline" className="text-lg px-8">
-            Watch Demo
-          </Button>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-4xl mx-auto">
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">10x</div>
-            <div className="text-sm text-muted-foreground">Faster Analysis</div>
+    <section id="top" className="relative overflow-hidden">
+      <div className="absolute inset-0 landing-aurora" />
+      <div className="absolute inset-0 landing-grid opacity-30" />
+      <div className="container relative z-10 px-4 py-16 md:py-20">
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+          <div className="space-y-6 animate-fade-up">
+            <Badge className="w-fit bg-primary/10 text-primary hover:bg-primary/20">
+              Document intelligence for teams
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-serif font-semibold tracking-tight">
+              Turn documents into a living knowledge base.
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              PaperChat AI indexes contracts, reports, and policies so your team can ask
+              questions in natural language and get precise, sourced answers in seconds.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="text-base" asChild>
+                <Link to="/auth">
+                  Get started free
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="text-base" asChild>
+                <a href="#workflow">View product tour</a>
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+              {quickFacts.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.label} className="flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-primary" />
+                    <span>{item.label}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">50+</div>
-            <div className="text-sm text-muted-foreground">File Formats</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">99%</div>
-            <div className="text-sm text-muted-foreground">Accuracy Rate</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</div>
-            <div className="text-sm text-muted-foreground">Availability</div>
+
+          <div className="relative animate-fade-left">
+            <Card className="border-2 shadow-xl bg-card/95">
+              <CardContent className="p-6 space-y-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Workspace</p>
+                    <h3 className="text-xl font-semibold">Q4 Strategy Pack</h3>
+                  </div>
+                  <Badge variant="secondary">Synced</Badge>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between rounded-lg border border-border/80 p-3 bg-background">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Board Report.pdf</p>
+                        <p className="text-xs text-muted-foreground">32 pages indexed</p>
+                      </div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">Just now</span>
+                  </div>
+                  <div className="rounded-lg border border-border/80 p-4 bg-background">
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">AI Summary</p>
+                    <p className="mt-2 text-sm text-foreground">
+                      Revenue is up 18% QoQ, with churn reduced by 6%. Key risks: enterprise renewals in EMEA.
+                    </p>
+                  </div>
+                </div>
+                <div className="rounded-lg border border-border/80 p-4 bg-background">
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Ask PaperChat</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    “Summarize contract renewal risks across all Q4 docs.”
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="absolute -bottom-10 right-6 w-[78%] border-2 shadow-lg bg-primary text-primary-foreground animate-float hidden sm:block">
+              <CardContent className="p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-primary-foreground/70">Instant answer</p>
+                <p className="mt-2 text-sm">
+                  Three contracts in EMEA renew within 45 days. Two include price escalators above 8%.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
