@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { FileText, LogOut, FolderOpen } from 'lucide-react';
-import { toast } from 'sonner';
-import CreateWorkspaceDialog from '@/components/workspace/CreateWorkspaceDialog';
-import WorkspaceCard from '@/components/workspace/WorkspaceCard';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { FileText, LogOut, FolderOpen } from "lucide-react";
+import { toast } from "sonner";
+import CreateWorkspaceDialog from "@/components/workspace/CreateWorkspaceDialog";
+import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +16,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
 interface Workspace {
   id: string;
@@ -34,11 +34,13 @@ const Workspaces = () => {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [workspaceToDelete, setWorkspaceToDelete] = useState<string | null>(null);
+  const [workspaceToDelete, setWorkspaceToDelete] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/auth');
+      navigate("/auth");
     }
   }, [user, authLoading, navigate]);
 
@@ -50,8 +52,9 @@ const Workspaces = () => {
 
       // Fetch workspace memberships
       const { data: memberships, error: memberError } = await supabase
-        .from('workspace_members')
-        .select(`
+        .from("workspace_members")
+        .select(
+          `
           workspace_id,
           role,
           workspaces (
@@ -61,14 +64,15 @@ const Workspaces = () => {
             owner_id,
             created_at
           )
-        `)
-        .eq('user_id', user.id);
+        `
+        )
+        .eq("user_id", user.id);
 
       if (memberError) throw memberError;
 
       // Get member counts for each workspace
       const workspaceIds = memberships?.map((m: any) => m.workspace_id) || [];
-      
+
       if (workspaceIds.length === 0) {
         setWorkspaces([]);
         setLoading(false);
@@ -76,9 +80,9 @@ const Workspaces = () => {
       }
 
       const { data: memberCounts, error: countError } = await supabase
-        .from('workspace_members')
-        .select('workspace_id')
-        .in('workspace_id', workspaceIds);
+        .from("workspace_members")
+        .select("workspace_id")
+        .in("workspace_id", workspaceIds);
 
       if (countError) throw countError;
 
@@ -89,19 +93,20 @@ const Workspaces = () => {
       }, {});
 
       // Combine data
-      const workspacesData = memberships?.map((m: any) => ({
-        id: m.workspaces.id,
-        name: m.workspaces.name,
-        description: m.workspaces.description,
-        owner_id: m.workspaces.owner_id,
-        created_at: m.workspaces.created_at,
-        user_role: m.role,
-        member_count: counts[m.workspace_id] || 0,
-      })) || [];
+      const workspacesData =
+        memberships?.map((m: any) => ({
+          id: m.workspaces.id,
+          name: m.workspaces.name,
+          description: m.workspaces.description,
+          owner_id: m.workspaces.owner_id,
+          created_at: m.workspaces.created_at,
+          user_role: m.role,
+          member_count: counts[m.workspace_id] || 0,
+        })) || [];
 
       setWorkspaces(workspacesData);
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch workspaces');
+      toast.error(error.message || "Failed to fetch workspaces");
     } finally {
       setLoading(false);
     }
@@ -121,16 +126,16 @@ const Workspaces = () => {
 
     try {
       const { error } = await supabase
-        .from('workspaces')
+        .from("workspaces")
         .delete()
-        .eq('id', workspaceToDelete);
+        .eq("id", workspaceToDelete);
 
       if (error) throw error;
 
-      toast.success('Workspace deleted successfully');
+      toast.success("Workspace deleted successfully");
       fetchWorkspaces();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete workspace');
+      toast.error(error.message || "Failed to delete workspace");
     } finally {
       setDeleteDialogOpen(false);
       setWorkspaceToDelete(null);
@@ -203,7 +208,11 @@ const Workspaces = () => {
                   description={workspace.description}
                   role={workspace.user_role}
                   memberCount={workspace.member_count}
-                  onDelete={workspace.user_role === 'owner' ? handleDeleteWorkspace : undefined}
+                  onDelete={
+                    workspace.user_role === "owner"
+                      ? handleDeleteWorkspace
+                      : undefined
+                  }
                   onMemberInvited={fetchWorkspaces}
                 />
               ))}
@@ -217,12 +226,16 @@ const Workspaces = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the workspace and all its data. This action cannot be undone.
+              This will permanently delete the workspace and all its data. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

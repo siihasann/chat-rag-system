@@ -5,11 +5,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
-import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Workspaces from "./pages/Workspaces";
 import WorkspaceDetail from "./pages/WorkspaceDetail";
 import NotFound from "./pages/NotFound";
+import AuthPage from "./pages/auth/page";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -21,7 +21,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/workspaces" element={<Workspaces />} />
             <Route path="/workspaces/:id" element={<WorkspaceDetail />} />
