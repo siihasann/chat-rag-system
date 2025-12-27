@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -15,14 +16,13 @@ export interface Workspace {
 
 export const useWorkspaces = () => {
   const { user } = useAuth();
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const fetchWorkspaces = async () => {
-    if (!user) return;
-
-    try {
-      setLoading(true);
+  const query = useQuery({
+    queryKey: ["workspaces", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      if (!user) return [];
 
       // Fetch workspace memberships
       const { data: memberships, error: memberError } = await supabase
@@ -48,9 +48,7 @@ export const useWorkspaces = () => {
       const workspaceIds = memberships?.map((m: any) => m.workspace_id) || [];
 
       if (workspaceIds.length === 0) {
-        setWorkspaces([]);
-        setLoading(false);
-        return;
+        return [];
       }
 
       const { data: memberCounts, error: countError } = await supabase
@@ -67,7 +65,7 @@ export const useWorkspaces = () => {
       }, {});
 
       // Combine data
-      const workspacesData =
+      return (
         memberships?.map((m: any) => ({
           id: m.workspaces.id,
           name: m.workspaces.name,
@@ -76,15 +74,18 @@ export const useWorkspaces = () => {
           created_at: m.workspaces.created_at,
           user_role: m.role,
           member_count: counts[m.workspace_id] || 0,
-        })) || [];
+        })) || []
+      );
+    },
+  });
 
-      setWorkspaces(workspacesData);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch workspaces");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (!query.isError) return;
+    const message =
+      (query.error as { message?: string })?.message ||
+      "Failed to fetch workspaces";
+    toast.error(message);
+  }, [query.isError, query.error]);
 
   const deleteWorkspace = async (id: string) => {
     try {
@@ -93,7 +94,7 @@ export const useWorkspaces = () => {
       if (error) throw error;
 
       toast.success("Workspace deleted successfully");
-      fetchWorkspaces();
+      queryClient.invalidateQueries({ queryKey: ["workspaces", user?.id] });
       return true;
     } catch (error: any) {
       toast.error(error.message || "Failed to delete workspace");
@@ -101,14 +102,10 @@ export const useWorkspaces = () => {
     }
   };
 
-  useEffect(() => {
-    fetchWorkspaces();
-  }, [user]);
-
   return {
-    workspaces,
-    loading,
-    fetchWorkspaces,
+    workspaces: query.data ?? [],
+    loading: query.isLoading,
+    fetchWorkspaces: () => query.refetch(),
     deleteWorkspace,
   };
 };

@@ -7,10 +7,20 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workspaces from "./pages/workspace/page";
-import WorkspaceDetail from "./pages/WorkspaceDetail";
+import WorkspaceDetail from "./pages/workspace/WorkspaceDetail";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/auth/page";
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
