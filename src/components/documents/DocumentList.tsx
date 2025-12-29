@@ -1,16 +1,25 @@
-import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { FileText, Download, Trash2, MoreVertical, Loader2, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  FileText,
+  Download,
+  Trash2,
+  MoreVertical,
+  Loader2,
+  CheckCircle,
+  XCircle,
+  RefreshCw,
+} from "lucide-react";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +29,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
 interface Document {
   id: string;
@@ -49,22 +58,28 @@ const getFileIcon = (mimeType: string) => {
   return FileText;
 };
 
-const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentListProps) => {
+const DocumentList = ({
+  documents,
+  workspaceRole,
+  onDocumentDeleted,
+}: DocumentListProps) => {
   const { user } = useAuth();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [documentToDelete, setDocumentToDelete] = useState<Document | null>(null);
+  const [documentToDelete, setDocumentToDelete] = useState<Document | null>(
+    null
+  );
   const [reprocessingId, setReprocessingId] = useState<string | null>(null);
 
   const handleDownload = async (document: Document) => {
     try {
       const { data, error } = await supabase.storage
-        .from('documents')
+        .from("documents")
         .download(document.file_path);
 
       if (error) throw error;
 
       const url = URL.createObjectURL(data);
-      const a = window.document.createElement('a');
+      const a = window.document.createElement("a");
       a.href = url;
       a.download = document.name;
       window.document.body.appendChild(a);
@@ -72,7 +87,7 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
       window.document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error: any) {
-      toast.error(error.message || 'Failed to download document');
+      toast.error(error.message || "Failed to download document");
     }
   };
 
@@ -87,23 +102,23 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
     try {
       // Delete from storage
       const { error: storageError } = await supabase.storage
-        .from('documents')
+        .from("documents")
         .remove([documentToDelete.file_path]);
 
       if (storageError) throw storageError;
 
       // Delete from database
       const { error: dbError } = await supabase
-        .from('documents')
+        .from("documents")
         .delete()
-        .eq('id', documentToDelete.id);
+        .eq("id", documentToDelete.id);
 
       if (dbError) throw dbError;
 
-      toast.success('Document deleted');
+      toast.success("Document deleted");
       onDocumentDeleted();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete document');
+      toast.error(error.message || "Failed to delete document");
     } finally {
       setDeleteDialogOpen(false);
       setDocumentToDelete(null);
@@ -111,19 +126,19 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
   };
 
   const canDelete = (document: Document) => {
-    return workspaceRole === 'owner' || document.uploaded_by === user?.id;
+    return workspaceRole === "owner" || document.uploaded_by === user?.id;
   };
 
   const handleReprocess = async (document: Document) => {
     setReprocessingId(document.id);
     try {
-      await supabase.functions.invoke('process-document', {
-        body: { documentId: document.id }
+      await supabase.functions.invoke("process-document", {
+        body: { documentId: document.id },
       });
-      toast.success('Document queued for reprocessing');
+      toast.success("Document queued for reprocessing");
       onDocumentDeleted(); // Refresh list
     } catch (error) {
-      toast.error('Failed to reprocess document');
+      toast.error("Failed to reprocess document");
     } finally {
       setReprocessingId(null);
     }
@@ -131,14 +146,36 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'completed':
-        return <Badge variant="outline" className="text-green-600 border-green-600"><CheckCircle className="h-3 w-3 mr-1" />Ready</Badge>;
-      case 'processing':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-600"><Loader2 className="h-3 w-3 mr-1 animate-spin" />Processing</Badge>;
-      case 'failed':
-        return <Badge variant="outline" className="text-red-600 border-red-600"><XCircle className="h-3 w-3 mr-1" />Failed</Badge>;
+      case "completed":
+        return (
+          <Badge variant="outline" className="text-green-600 border-green-600">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Ready
+          </Badge>
+        );
+      case "processing":
+        return (
+          <Badge
+            variant="outline"
+            className="text-yellow-600 border-yellow-600"
+          >
+            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+            Processing
+          </Badge>
+        );
+      case "failed":
+        return (
+          <Badge variant="outline" className="text-red-600 border-red-600">
+            <XCircle className="h-3 w-3 mr-1" />
+            Failed
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="text-muted-foreground">Pending</Badge>;
+        return (
+          <Badge variant="outline" className="text-muted-foreground">
+            Pending
+          </Badge>
+        );
     }
   };
 
@@ -160,21 +197,28 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
           return (
             <div
               key={doc.id}
-              className="flex items-center gap-4 py-3 hover:bg-muted/50 px-3 -mx-3 rounded-lg transition-colors"
+              className="flex flex-col gap-2 py-2.5 hover:bg-muted/30 px-2 rounded-md transition-colors sm:flex-row sm:items-center"
             >
-              <Icon className="h-8 w-8 text-primary shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="font-medium truncate">{doc.name}</p>
-                  {getStatusBadge(doc.status)}
+              <div className="flex items-start gap-3 flex-1 min-w-0">
+                <Icon className="h-7 w-7 text-primary shrink-0 sm:h-8 sm:w-8" />
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-medium truncate">{doc.name}</p>
+                    {getStatusBadge(doc.status)}
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    {formatFileSize(doc.file_size)} •{" "}
+                    {new Date(doc.created_at).toLocaleDateString()}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {formatFileSize(doc.file_size)} • {new Date(doc.created_at).toLocaleDateString()}
-                </p>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 self-start sm:self-center"
+                  >
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -183,12 +227,16 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
                     <Download className="h-4 w-4 mr-2" />
                     Download
                   </DropdownMenuItem>
-                  {(doc.status === 'failed' || doc.status === 'pending') && (
-                    <DropdownMenuItem 
+                  {(doc.status === "failed" || doc.status === "pending") && (
+                    <DropdownMenuItem
                       onClick={() => handleReprocess(doc)}
                       disabled={reprocessingId === doc.id}
                     >
-                      <RefreshCw className={`h-4 w-4 mr-2 ${reprocessingId === doc.id ? 'animate-spin' : ''}`} />
+                      <RefreshCw
+                        className={`h-4 w-4 mr-2 ${
+                          reprocessingId === doc.id ? "animate-spin" : ""
+                        }`}
+                      />
                       Reprocess
                     </DropdownMenuItem>
                   )}
@@ -213,12 +261,16 @@ const DocumentList = ({ documents, workspaceRole, onDocumentDeleted }: DocumentL
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Document</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{documentToDelete?.name}"? This action cannot be undone.
+              Are you sure you want to delete "{documentToDelete?.name}"? This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
